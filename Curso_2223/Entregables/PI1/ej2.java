@@ -1,10 +1,40 @@
-package pruebas;
+package ejercicios;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
+
+import us.lsi.common.Files2;
 
 public class ej2 {
+	
+	/*Dada la siguiente definición recursiva de la función f (que toma como entrada 2
+	números enteros positivos y una cadena, y devuelve un número entero):
+	𝑓(𝑎, 𝑏, 𝑠) =
+	⎩ ⎪ ⎨
+	⎪ ⎧
+	𝑎 ∗ 𝑎 + 𝑏 ∗ 𝑏, 𝑠. 𝑙𝑒𝑛𝑔𝑡ℎ = 0
+	𝑠. 𝑙𝑒𝑛𝑔𝑡ℎ + 𝑎 + 𝑏, 𝑎 < 2 || 𝑏 < 2
+	𝑎 + 𝑏 + 𝑓(𝑎 − 1,
+	𝑏
+	2
+	, 𝑠. 𝑠𝑢𝑏𝑠𝑡𝑟𝑖𝑛𝑔(𝑎%𝑠. 𝑙𝑒𝑛𝑔𝑡ℎ, 𝑏%𝑠. 𝑙𝑒𝑛𝑔𝑡ℎ)), 𝑎%𝑠. 𝑙𝑒𝑛𝑔𝑡ℎ < 𝑏%𝑠. 𝑙𝑒𝑛𝑔𝑡ℎ
+	𝑎 ∗ 𝑏 + 𝑓(
+	𝑎
+	2
+	, 𝑏 − 1, 𝑠. 𝑠𝑢𝑏𝑠𝑡𝑟𝑖𝑛𝑔(𝑏%𝑠. 𝑙𝑒𝑛𝑔𝑡ℎ, 𝑎%𝑠. 𝑙𝑒𝑛𝑔𝑡ℎ)), 𝑒𝑛 𝑜𝑡𝑟𝑜 𝑐𝑎𝑠𝑜
+	 * */
+	/*
+	public static Integer ej2Iter(Integer a, Integer b, String s) {
+		Integer res = 0;
+		return res;
+	}
+	
+	public static Integer ej2RF(Integer a, Integer b, String s) {
+		Integer res = 0;
+		
+		return res;
+	}*/
+	
+	// Hasta aquí lo comprobado
 	
 	public static Integer ej2RNF(Integer a, Integer b, String s) {
 		Integer res = 0;
@@ -72,43 +102,43 @@ public class ej2 {
 		}
 	}
 	
-	/*public static Integer ej2Iterv2(Integer a, Integer b, String s) {
-		Integer res= 0;
-		Map<Trio, Integer> mem = new HashMap<Trio, Integer>();
-		for (int i = 0; i < a; i++) {
-			for (int j = 0; j < b; j++) {
-				for (int k = 0; k < s.length(); k++) {
-					Trio temp = Trio.of(a, b, s);
-					if(s.length() == 0) {
-						mem.put(temp, a*a + b*b);
-					}else if(i < 2 || j < 2) {
-						mem.put(temp, s.length()+a+b);
-					}else if(i%s.length() < j%s.length()) {
-						Integer mul = i*j;
-						Integer res_t1 = mul + mem.get(Trio.of(i-1, j/2, s.substring(i%s.length(), j%s.length())));
-						mem.put(temp, res_t1);
-					}else {
-						Integer sum = i+j;
-						Integer res_t2 = sum +mem.get(Trio.of(i/2, j-1, s.substring(j%s.length(), i%s.length())));
-						mem.put(temp, res_t2);
-					}
-				}
-			}
-		}
-		return res = mem.get(Trio.of(a, b, s));
-	}*/
+	/*
+	 *  Intentar usar Function para hacer las funciones auxiliares que se creen para el caso recursivo y 
+	 *  luego otra Function pero con el caso base*/
+	public static Integer ej2F(Integer a, Integer b, String s) {
+		Integer res = 0;
+		
+		return res;
+	}
 	
-	public static void lectura(String s) {
+	public static void lectura(String s){
+		List<String> ls = Files2.linesFromFile(s);
+		for (String linea : ls) {
+	        String[] line = linea.split(",");
+
+	        for(int i=0;i<line.length-1;i++) {
+	            String s1 = line[i];
+	            Integer a1 = Integer.parseInt(s1);
+	            String s2 = line[i+1];
+	            Integer a2 = Integer.parseInt(s2);
+	            String s3 = line[i+2];
+	            i++;
+	            System.out.println("\nParámetros de entrada: "+ a1+", "+a2+", "+s3);
+	            System.out.println("1. Recursivo final: "+ ej2RF(a1, a2, s3));
+	            System.out.println("2. Recursivo no final: "+ej2RNF(a1, a2, s3));
+	            System.out.println("3. Iterativo: "+ ej2Iter(a1, a2, s3));
+	        }
+		}
 		
 	}
+	
+	
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		//lectura("tests/PI1Ej2DatosEntrada.txt");
 		
-		System.out.println(ej2RNF(10, 20, "adda"));
-		System.out.println(ej2RF(10, 20, "adda"));
-		System.out.println(ej2Iter(10, 20, "adda"));
-		//System.out.println(ej2Iterv2(10, 20, "adda"));
+		lectura("ficherosBuenos/PI1Ej2DatosEntrada.txt");
 
 	}
 
