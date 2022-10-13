@@ -1,6 +1,7 @@
 package ejercicios;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import us.lsi.common.Files2;
 
@@ -96,18 +97,49 @@ public class ej2 {
 		return res;
 	}
 	
-	public static record Trio(Integer a, Integer b, String s) {
-		public static Trio of(Integer a, Integer b, String s) {
-			return new Trio(a,b,s);
+	public static record Trio(Integer a, Integer b, String s, Integer res) {
+		public static Trio of(Integer a, Integer b, String s, Integer res) {
+			return new Trio(a,b,s, res);
 		}
+		public static Trio first(Integer a, Integer b, String s) {
+			return of(a,b,s,0);
+		}
+		public Trio next() {
+			if(a%s.length() < b%s.length()) {
+				return of(a/2, b-1, s.substring(b%s.length(), a%s.length()), res + a + b);
+			}else {
+				return of(a/2, b-1, s.substring(b%s.length(), a%s.length()), res + (a*b));
+			}
+		}
+		
+		public Boolean isCaseBase() {
+			return (s.length() == 0) || (a < 2 || b < 2);
+		}
+		
+		/*public Integer caseBase() {
+			if(s.length() == 0) {
+				res = a * a + b * b + res;
+			}else if (a < 2 || b < 2) {
+				res =  s.length() + a + b + res;
+			}
+			return res;
+		}*/
 	}
 	
 	/*
 	 *  Intentar usar Function para hacer las funciones auxiliares que se creen para el caso recursivo y 
 	 *  luego otra Function pero con el caso base*/
-	public static Integer ej2F(Integer a, Integer b, String s) {
-		Integer res = 0;
+	public static Integer ej2Funcional(Integer a, Integer b, String s) {
+		Trio trio = Stream.iterate(Trio.first(a, b, s), elem-> elem.next())
+				.filter(elem->elem.isCaseBase())
+				.findFirst().get();
 		
+		Integer res = trio.res();
+		if(trio.s().length() == 0) {
+			res = trio.a() * trio.a() + trio.b() * trio.b() + res;
+		}else {
+			res = trio.s().length() + trio.a() + trio.b() + res;
+		}
 		return res;
 	}
 	
@@ -127,9 +159,27 @@ public class ej2 {
 	            System.out.println("1. Recursivo final: "+ ej2RF(a1, a2, s3));
 	            System.out.println("2. Recursivo no final: "+ej2RNF(a1, a2, s3));
 	            System.out.println("3. Iterativo: "+ ej2Iter(a1, a2, s3));
+	            //System.out.println("4. Funcional: "+ ej2Funcional(a1, a2, s));
 	        }
 		}
 		
+	}
+	
+	public static void lecturav2(String s) {
+		List<String> ls = Files2.linesFromFile(s);
+		for (String linea : ls) {
+	        String[] line = linea.split(",");
+	        
+	        Integer a = Integer.parseInt(line[0]);
+	        Integer b = Integer.parseInt(line[1]);
+	        String s1 = line[2];
+	        System.out.println("\nParámetros de entrada: "+ a+", "+b+", "+s);
+            System.out.println("1. Recursivo final: "+ ej2RF(a,b,s));
+            System.out.println("2. Recursivo no final: "+ej2RNF(a,b,s));
+            System.out.println("3. Iterativo: "+ ej2Iter(a,b,s));
+            System.out.println("4. Funcional: "+ ej2Funcional(a,b, s));
+            System.out.println("__________________________________________ \n");
+		}
 	}
 	
 	

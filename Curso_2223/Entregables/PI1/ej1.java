@@ -127,6 +127,8 @@ public class ej1 {
 			varD, Integer varE){
 		return ej1RFAUX(varA, varB, varC, varD, varE, new HashMap<>());
 	}
+	
+	
 	public static Map<Integer, List<String>> ej1RFAUX(Integer varA, String varB, Integer varC, String
 			varD, Integer varE, Map<Integer, List<String>> res){
 		if(varA <= varC) {
@@ -157,7 +159,8 @@ public class ej1 {
 		List<String> ls = Files2.linesFromFile(s);
 		for (String linea : ls) {
 	        String[] line = linea.split(",");
-
+	        
+	        /*
 	        for(int i=0;i<line.length-1;i++) {
 	            String s1 = line[i];
 	            Integer i1 = Integer.parseInt(s1);
@@ -166,11 +169,18 @@ public class ej1 {
 	            Integer i3 = Integer.parseInt(s3);
 	            String s4 = line[i+3];
 	            Integer i5 = Integer.parseInt(line[i+4]);
-	            i++;
-	            System.out.println("\nParámetros de entrada: "+ i1 +", "+ s2 +", "+ i3 + ", " + s4 + ", " +i5 );
-	            System.out.println("1. Iterativa: "+ ej1Iterv2(i1, s2, i3, s4, i5));
-	            //System.out.println("2. Recursivo" +);
-	        }
+	           
+	        }*/
+	        Integer varA = Integer.parseInt(line[0]);
+	        String varB = line[1];
+	        Integer varC = Integer.parseInt(line[2]);
+	        String varD = line[3];
+	        Integer varE = Integer.parseInt(line[4]);
+	        System.out.println("Parámetros de entrada: "+ varA +", "+ varB +", "+ varC + ", " + varD + ", " + varE);
+            System.out.println("1. Iterativa: "+ ej1Iterv2(varA, varB, varC, varD, varE));
+            System.out.println("2. Recursivo: " + ej1RF(varA, varB, varC, varD, varE));
+            
+            System.out.println("__________________________________________ \n");
 		}
 		
 	}
@@ -205,7 +215,7 @@ public class ej1 {
 		System.out.println(ej1RF(5,"pera",10, "pi�a" ,20));
 		System.out.println(ej1RF(15,"zumo",25,"frutas",50));*/
 		
-		lecturav2("ficherosBuenos/PI1Ej1DatosEntrada.txt");
+		//lecturav2("ficherosBuenos/PI1Ej1DatosEntrada.txt");
 		
 		lectura("ficherosBuenos/PI1Ej1DatosEntrada.txt");
 		

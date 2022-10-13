@@ -1,11 +1,13 @@
 package ejercicios;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import us.lsi.common.Files2;
 import us.lsi.geometria.Punto2D;
 import us.lsi.geometria.Punto2D.Cuadrante;
+import us.lsi.streams.Stream2;
 
 public class ej3 {
 	
@@ -57,7 +59,22 @@ public class ej3 {
 		return ls.stream().filter(p-> (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ).toList();
 	}
 	
+	
 	// Usamos la referencia de la lectura iterativa del ejercicio de Miguel Toro de la página 256
+	/*
+	public static List<Punto2D> algoritmoIterOrdenado(String s1, String s2){
+		Iterator<String> it1 = Stream2.file(s1).iterator();
+		Iterator<String> it2 = Stream2.file(s2).iterator();
+		
+		while(it1.hasNext() && it2.hasNext()) {
+			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
+				res.add(p);
+			}
+			
+			it
+		}
+		
+	}*/
 	
 	public static List<Punto2D> algoritmoIterOrdenado(List<Punto2D> ls1, List<Punto2D> ls2){
 		List<Punto2D> res = new ArrayList<>();
