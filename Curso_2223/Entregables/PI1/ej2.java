@@ -130,9 +130,11 @@ public class ej2 {
 	 *  Intentar usar Function para hacer las funciones auxiliares que se creen para el caso recursivo y 
 	 *  luego otra Function pero con el caso base*/
 	public static Integer ej2Funcional(Integer a, Integer b, String s) {
+		
 		Trio trio = Stream.iterate(Trio.first(a, b, s), elem-> elem.next())
 				.filter(elem->elem.isCaseBase())
 				.findFirst().get();
+		
 		
 		Integer res = trio.res();
 		if(trio.s().length() == 0) {
@@ -159,7 +161,7 @@ public class ej2 {
 	            System.out.println("1. Recursivo final: "+ ej2RF(a1, a2, s3));
 	            System.out.println("2. Recursivo no final: "+ej2RNF(a1, a2, s3));
 	            System.out.println("3. Iterativo: "+ ej2Iter(a1, a2, s3));
-	            //System.out.println("4. Funcional: "+ ej2Funcional(a1, a2, s));
+	            System.out.println("4. Funcional: "+ ej2Funcional(a1, a2, s));
 	        }
 		}
 		
