@@ -282,33 +282,65 @@ public class ej3 {
 		System.out.println("________________________________________________" + "\n");
 	}
 	
-	
+		
 	/*
 	 * 	El concepto de lectura es que cogeremos los dos datos de entrada y 
 	 * almacenaremos los datos en la MISMA lista de cuadrantes
 	 */
 	
-	/*
-	public static record Puntos(Punto2D p1, Punto2D p2) {
-		public static Puntos of(String s1, String s2) {
-			String line1[] = s1.split(",");
-			String line2[] = s2.split(",");
-			return new Puntos(Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1])),
-					Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1])));
+	public static record Puntos(Iterator<String> it1, Iterator<String> it2, String i1, String i2, List<Punto2D> res) {
+		
+		public static Puntos of(Iterator<String> it1, Iterator<String> it2, String i1, String i2, List<Punto2D> res) {
+			return new Puntos(it1, it2, i1,i2, res);
 		}
 		
-		public static Puntos next() {
-			if() {
-				
+		public static Puntos first(String s1, String s2) {
+			Iterator<String> it1 = Stream2.file(s1).iterator();
+			Iterator<String> it2 = Stream2.file(s2).iterator();
+			String i1 = it1.next();
+			String i2 = it2.next();
+			List<Punto2D> res = new ArrayList<>();
+			return of(it1, it2, i1,i2, res);
+		}
+		
+		public Boolean isCaseBase() {
+			// Es caso base cuando ya no haya siguiente
+			return !(it1.hasNext() && it2.hasNext());
+		}
+		
+		public Puntos next() {
+			String line1[] = i1.split(",");
+			String line2[] = i2.split(",");
+			
+			Punto2D p = Punto2D.of(0.0,0.0);
+			
+			Punto2D p1aux = Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1]));
+			Punto2D p2aux = Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1]));
+			
+			if(p1aux.compareTo(p2aux) < 0) {
+				p = p1aux;
+				i1 = it1.next();
+			} else {
+				p = p2aux;
+				i2 = it2.next();
+			}
+			
+			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
+				res.add(p);
+				return of(it1, it2, i1, i2, res);
+			}else {
+				return of(it1, it2, i1, i2, res);
 			}
 		}
 	}
 	
 	public static List<Punto2D> ej3F(String s1, String s2){
-		Iterator<String> it1 = Stream2.file(s1).iterator();
-		Iterator<String> it2 = Stream2.file(s2).iterator();
+		
+		Puntos pnt = Stream.iterate(Puntos.first(s1, s2), elem->elem.next())
+				.filter(elem->elem.isCaseBase())
+				.findFirst().get();
+		return pnt.res;
 	}
-	*/
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		List<Punto2D> ejemplo = new ArrayList<>();
