@@ -60,22 +60,81 @@ public class ej3 {
 	}
 	
 	
-	// Usamos la referencia de la lectura iterativa del ejercicio de Miguel Toro de la página 256
-	/*
+	// Aquí usaremos como referencia fusionSecuenciasOrdenadas de clase
 	public static List<Punto2D> algoritmoIterOrdenado(String s1, String s2){
 		Iterator<String> it1 = Stream2.file(s1).iterator();
 		Iterator<String> it2 = Stream2.file(s2).iterator();
 		
+		String i1 = it1.next();
+		String i2 = it2.next();
+		List<Punto2D> res = new ArrayList<>();
 		while(it1.hasNext() && it2.hasNext()) {
+			String line1[] = i1.split(",");
+			String line2[] = i2.split(",");
+			
+			Punto2D p = Punto2D.of(0.0,0.0);
+			
+			Punto2D p1aux = Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1]));
+			Punto2D p2aux = Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1]));
+			
+			if(p1aux.compareTo(p2aux) < 0) {
+				p = p1aux;
+				i1 = it1.next();
+			} else {
+				p = p2aux;
+				i2 = it2.next();
+			}
+			
 			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
 				res.add(p);
 			}
 			
-			it
 		}
 		
-	}*/
+		return res;
+		
+	}
 	
+	public static List<Punto2D> algoritmoROrdenado(String s1, String s2){
+		Iterator<String> it1 = Stream2.file(s1).iterator();
+		Iterator<String> it2 = Stream2.file(s2).iterator();
+		String i1 = it1.next();
+		String i2 = it2.next();
+		List<Punto2D> res = new ArrayList<>();
+		
+		return algoritmoROrdenado(it1, it2, i1,i2, res);
+	}
+	
+	public static List<Punto2D> algoritmoROrdenado(Iterator<String> it1, Iterator<String> it2, String i1, String i2, List<Punto2D> res){
+		if((it1.hasNext() && it2.hasNext())) {
+			String line1[] = i1.split(",");
+			String line2[] = i2.split(",");
+			
+			Punto2D p = Punto2D.of(0.0,0.0);
+			Punto2D p1aux = Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1]));
+			Punto2D p2aux = Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1]));
+			if(p1aux.compareTo(p2aux) < 0) {
+				p = p1aux;
+				i1 = it1.next();
+			} else {
+				p = p2aux;
+				i2 = it2.next();
+			}
+			
+			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
+				res.add(p);
+				res = algoritmoROrdenado(it1, it2, i1, i2, res);
+			}else {
+				res = algoritmoROrdenado(it1, it2, i1, i2, res);
+			}
+		}
+		
+		return res;
+		
+	}
+	
+	// Usamos la referencia de la lectura iterativa del ejercicio de Miguel Toro de la página 256
+
 	public static List<Punto2D> algoritmoIterOrdenado(List<Punto2D> ls1, List<Punto2D> ls2){
 		List<Punto2D> res = new ArrayList<>();
 		Integer i1 = 0;
@@ -178,6 +237,7 @@ public class ej3 {
 		
 		System.out.println("La solución iterativa ordenada es: " + algoritmoIterOrdenado(res1, res2));
 		System.out.println("La solución recursiva ordenada es: " + algoritmoRFOrdenado(res1, res2));
+		
 	}
 	
 	public static void lecturaPunto(String fichero1, String fichero2) {
@@ -218,13 +278,37 @@ public class ej3 {
 		System.out.println("2. Solución recursiva final: \n" + ej3RF(res) + "\n");
 		System.out.println("3. Solución funcional: \n" + ej3Funcional(res) + "\n");
 		
+		
 		System.out.println("________________________________________________" + "\n");
 	}
+	
 	
 	/*
 	 * 	El concepto de lectura es que cogeremos los dos datos de entrada y 
 	 * almacenaremos los datos en la MISMA lista de cuadrantes
 	 */
+	
+	/*
+	public static record Puntos(Punto2D p1, Punto2D p2) {
+		public static Puntos of(String s1, String s2) {
+			String line1[] = s1.split(",");
+			String line2[] = s2.split(",");
+			return new Puntos(Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1])),
+					Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1])));
+		}
+		
+		public static Puntos next() {
+			if() {
+				
+			}
+		}
+	}
+	
+	public static List<Punto2D> ej3F(String s1, String s2){
+		Iterator<String> it1 = Stream2.file(s1).iterator();
+		Iterator<String> it2 = Stream2.file(s2).iterator();
+	}
+	*/
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		List<Punto2D> ejemplo = new ArrayList<>();
@@ -238,11 +322,16 @@ public class ej3 {
 		lecturaPunto("testsAlumnos/PI1EJ3DatosEntrada3A.txt", "testsAlumnos/PI1EJ3DatosEntrada3B.txt");
 		*/
 		
-		lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada1A.txt", "testsAlumnos/PI1EJ3DatosEntrada1B.txt");
-		lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada2A.txt", "testsAlumnos/PI1EJ3DatosEntrada2B.txt");
-		lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada3A.txt", "testsAlumnos/PI1EJ3DatosEntrada3B.txt");
+		//lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada1A.txt", "testsAlumnos/PI1EJ3DatosEntrada1B.txt");
+		//lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada2A.txt", "testsAlumnos/PI1EJ3DatosEntrada2B.txt");
+		//lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada3A.txt", "testsAlumnos/PI1EJ3DatosEntrada3B.txt");
+		System.out.println("La primera solución en iterativa es: " + algoritmoIterOrdenado("testsAlumnos/PI1EJ3DatosEntrada1A.txt", "testsAlumnos/PI1EJ3DatosEntrada1B.txt"));
+		System.out.println("La segunda solución en iterativa es: " + algoritmoIterOrdenado("testsAlumnos/PI1EJ3DatosEntrada2A.txt", "testsAlumnos/PI1EJ3DatosEntrada2B.txt"));
+		System.out.println("La tercera solución en iterativa es: " + algoritmoIterOrdenado("testsAlumnos/PI1EJ3DatosEntrada3A.txt", "testsAlumnos/PI1EJ3DatosEntrada3B.txt") + "\n");
 		
-
+		System.out.println("La primera solución recursiva es: " + algoritmoROrdenado("testsAlumnos/PI1EJ3DatosEntrada1A.txt", "testsAlumnos/PI1EJ3DatosEntrada1B.txt"));
+		System.out.println("La segunda solución recursiva es: " + algoritmoROrdenado("testsAlumnos/PI1EJ3DatosEntrada2A.txt", "testsAlumnos/PI1EJ3DatosEntrada2B.txt"));
+		System.out.println("La tercera solución recursiva es: " + algoritmoROrdenado("testsAlumnos/PI1EJ3DatosEntrada3A.txt", "testsAlumnos/PI1EJ3DatosEntrada3B.txt"));
 	}
 
 }
