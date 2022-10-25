@@ -3,6 +3,9 @@ package ejercicios;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import us.lsi.common.Files2;
 import us.lsi.geometria.Punto2D;
@@ -60,78 +63,7 @@ public class ej3 {
 	}
 	
 	
-	// Aquí usaremos como referencia fusionSecuenciasOrdenadas de clase
-	public static List<Punto2D> algoritmoIterOrdenado(String s1, String s2){
-		Iterator<String> it1 = Stream2.file(s1).iterator();
-		Iterator<String> it2 = Stream2.file(s2).iterator();
-		
-		String i1 = it1.next();
-		String i2 = it2.next();
-		List<Punto2D> res = new ArrayList<>();
-		while(it1.hasNext() && it2.hasNext()) {
-			String line1[] = i1.split(",");
-			String line2[] = i2.split(",");
-			
-			Punto2D p = Punto2D.of(0.0,0.0);
-			
-			Punto2D p1aux = Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1]));
-			Punto2D p2aux = Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1]));
-			
-			if(p1aux.compareTo(p2aux) < 0) {
-				p = p1aux;
-				i1 = it1.next();
-			} else {
-				p = p2aux;
-				i2 = it2.next();
-			}
-			
-			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
-				res.add(p);
-			}
-			
-		}
-		
-		return res;
-		
-	}
 	
-	public static List<Punto2D> algoritmoROrdenado(String s1, String s2){
-		Iterator<String> it1 = Stream2.file(s1).iterator();
-		Iterator<String> it2 = Stream2.file(s2).iterator();
-		String i1 = it1.next();
-		String i2 = it2.next();
-		List<Punto2D> res = new ArrayList<>();
-		
-		return algoritmoROrdenado(it1, it2, i1,i2, res);
-	}
-	
-	public static List<Punto2D> algoritmoROrdenado(Iterator<String> it1, Iterator<String> it2, String i1, String i2, List<Punto2D> res){
-		if((it1.hasNext() && it2.hasNext())) {
-			String line1[] = i1.split(",");
-			String line2[] = i2.split(",");
-			
-			Punto2D p = Punto2D.of(0.0,0.0);
-			Punto2D p1aux = Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1]));
-			Punto2D p2aux = Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1]));
-			if(p1aux.compareTo(p2aux) < 0) {
-				p = p1aux;
-				i1 = it1.next();
-			} else {
-				p = p2aux;
-				i2 = it2.next();
-			}
-			
-			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
-				res.add(p);
-				res = algoritmoROrdenado(it1, it2, i1, i2, res);
-			}else {
-				res = algoritmoROrdenado(it1, it2, i1, i2, res);
-			}
-		}
-		
-		return res;
-		
-	}
 	
 	// Usamos la referencia de la lectura iterativa del ejercicio de Miguel Toro de la página 256
 
@@ -282,11 +214,85 @@ public class ej3 {
 		System.out.println("________________________________________________" + "\n");
 	}
 	
+	// Aquí usaremos como referencia fusionSecuenciasOrdenadas de clase
+		public static List<Punto2D> algoritmoIterOrdenado(String s1, String s2){
+			Iterator<String> it1 = Stream2.file(s1).iterator();
+			Iterator<String> it2 = Stream2.file(s2).iterator();
+			
+			String i1 = it1.next();
+			String i2 = it2.next();
+			List<Punto2D> res = new ArrayList<>();
+			while(it1.hasNext() && it2.hasNext()) {
+				String line1[] = i1.split(",");
+				String line2[] = i2.split(",");
+				
+				Punto2D p = Punto2D.of(0.0,0.0);
+				
+				Punto2D p1aux = Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1]));
+				Punto2D p2aux = Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1]));
+				
+				if(p1aux.compareTo(p2aux) < 0) {
+					p = p1aux;
+					i1 = it1.next();
+				} else {
+					p = p2aux;
+					i2 = it2.next();
+				}
+				
+				if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
+					res.add(p);
+				}
+				
+			}
+			
+			return res;
+			
+		}
 		
+		public static List<Punto2D> algoritmoROrdenado(String s1, String s2){
+			Iterator<String> it1 = Stream2.file(s1).iterator();
+			Iterator<String> it2 = Stream2.file(s2).iterator();
+			String i1 = it1.next();
+			String i2 = it2.next();
+			List<Punto2D> res = new ArrayList<>();
+			
+			return algoritmoROrdenado(it1, it2, i1,i2, res);
+		}
+		
+		public static List<Punto2D> algoritmoROrdenado(Iterator<String> it1, Iterator<String> it2, String i1, String i2, List<Punto2D> res){
+			if((it1.hasNext() && it2.hasNext())) {
+				String line1[] = i1.split(",");
+				String line2[] = i2.split(",");
+				
+				Punto2D p = Punto2D.of(0.0,0.0);
+				Punto2D p1aux = Punto2D.of(Double.parseDouble(line1[0]), Double.parseDouble(line1[1]));
+				Punto2D p2aux = Punto2D.of(Double.parseDouble(line2[0]), Double.parseDouble(line2[1]));
+				if(p1aux.compareTo(p2aux) < 0) {
+					p = p1aux;
+					i1 = it1.next();
+				} else {
+					p = p2aux;
+					i2 = it2.next();
+				}
+				
+				if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
+					res.add(p);
+					res = algoritmoROrdenado(it1, it2, i1, i2, res);
+				}else {
+					res = algoritmoROrdenado(it1, it2, i1, i2, res);
+				}
+			}
+			
+			return res;
+			
+		}
+	
+	
 	/*
 	 * 	El concepto de lectura es que cogeremos los dos datos de entrada y 
 	 * almacenaremos los datos en la MISMA lista de cuadrantes
 	 */
+	
 	
 	public static record Puntos(Iterator<String> it1, Iterator<String> it2, String i1, String i2, List<Punto2D> res) {
 		
@@ -319,15 +325,15 @@ public class ej3 {
 			
 			if(p1aux.compareTo(p2aux) < 0) {
 				p = p1aux;
-				i1 = it1.next();
+				//i1 = it1.next();
 			} else {
 				p = p2aux;
-				i2 = it2.next();
+				//i2 = it2.next();
 			}
 			
 			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
 				res.add(p);
-				return of(it1, it2, i1, i2, res);
+				return of(it1, it2, i1(), i2, res);
 			}else {
 				return of(it1, it2, i1, i2, res);
 			}
@@ -341,6 +347,49 @@ public class ej3 {
 				.findFirst().get();
 		return pnt.res;
 	}
+	
+	
+	// Método auxiliar para convertir los ficheros con los puntos en Iteradores de puntos
+	
+	public static Iterator<Punto2D> transformador(String file){
+		Function<String, Punto2D> parsePunto = s->{
+			String[] v = s.split(",");
+			Double x = Double.parseDouble(v[0]);
+			Double y = Double.parseDouble(v[1]);
+			return Punto2D.of(x,y);
+		};
+		
+		return Files2.streamFromFile(file).map(parsePunto).iterator();
+	}
+	
+	// No somos capaces de hacer la ordenación pero al menos tenemos el resultado
+	
+	public static List<Punto2D> ej3Fv2(String s1, String s2){
+		
+		List<Punto2D> res = new ArrayList<>();
+		
+		Iterator<Punto2D> it1 = transformador(s1);
+		Iterator<Punto2D> it2 = transformador(s2);
+		
+		it1.forEachRemaining(p->{
+			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
+				res.add(p);
+			}
+		});
+		
+		it2.forEachRemaining(p->{
+			if( (p.getCuadrante() == Cuadrante.PRIMER_CUADRANTE) || (p.getCuadrante() == Cuadrante.TERCER_CUADRANTE) ) {
+				res.add(p);
+			}
+		});
+		
+		// Resultado ordenado usando stream, se podría aplicar a otros resultados pero no serían iterativos en principio
+		
+		return res.stream().sorted().collect(Collectors.toList());
+	}
+	
+   
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		List<Punto2D> ejemplo = new ArrayList<>();
@@ -357,13 +406,18 @@ public class ej3 {
 		//lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada1A.txt", "testsAlumnos/PI1EJ3DatosEntrada1B.txt");
 		//lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada2A.txt", "testsAlumnos/PI1EJ3DatosEntrada2B.txt");
 		//lecturaPuntoOrdenado("testsAlumnos/PI1EJ3DatosEntrada3A.txt", "testsAlumnos/PI1EJ3DatosEntrada3B.txt");
-		System.out.println("La primera solución en iterativa es: " + algoritmoIterOrdenado("testsAlumnos/PI1EJ3DatosEntrada1A.txt", "testsAlumnos/PI1EJ3DatosEntrada1B.txt"));
-		System.out.println("La segunda solución en iterativa es: " + algoritmoIterOrdenado("testsAlumnos/PI1EJ3DatosEntrada2A.txt", "testsAlumnos/PI1EJ3DatosEntrada2B.txt"));
-		System.out.println("La tercera solución en iterativa es: " + algoritmoIterOrdenado("testsAlumnos/PI1EJ3DatosEntrada3A.txt", "testsAlumnos/PI1EJ3DatosEntrada3B.txt") + "\n");
+		System.out.println("La primera solución en iterativa es: " + algoritmoIterOrdenado("ficherosBuenos/PI1EJ3DatosEntrada1A.txt", "ficherosBuenos/PI1EJ3DatosEntrada1B.txt"));
+		System.out.println("La segunda solución en iterativa es: " + algoritmoIterOrdenado("ficherosBuenos/PI1EJ3DatosEntrada2A.txt", "ficherosBuenos/PI1EJ3DatosEntrada2B.txt"));
+		System.out.println("La tercera solución en iterativa es: " + algoritmoIterOrdenado("ficherosBuenos/PI1EJ3DatosEntrada3A.txt", "ficherosBuenos/PI1EJ3DatosEntrada3B.txt") + "\n");
 		
-		System.out.println("La primera solución recursiva es: " + algoritmoROrdenado("testsAlumnos/PI1EJ3DatosEntrada1A.txt", "testsAlumnos/PI1EJ3DatosEntrada1B.txt"));
-		System.out.println("La segunda solución recursiva es: " + algoritmoROrdenado("testsAlumnos/PI1EJ3DatosEntrada2A.txt", "testsAlumnos/PI1EJ3DatosEntrada2B.txt"));
-		System.out.println("La tercera solución recursiva es: " + algoritmoROrdenado("testsAlumnos/PI1EJ3DatosEntrada3A.txt", "testsAlumnos/PI1EJ3DatosEntrada3B.txt"));
+		System.out.println("La primera solución recursiva es: " + algoritmoROrdenado("ficherosBuenos/PI1EJ3DatosEntrada1A.txt", "ficherosBuenos/PI1EJ3DatosEntrada1B.txt"));
+		System.out.println("La segunda solución recursiva es: " + algoritmoROrdenado("ficherosBuenos/PI1EJ3DatosEntrada2A.txt", "ficherosBuenos/PI1EJ3DatosEntrada2B.txt"));
+		System.out.println("La tercera solución recursiva es: " + algoritmoROrdenado("ficherosBuenos/PI1EJ3DatosEntrada3A.txt", "ficherosBuenos/PI1EJ3DatosEntrada3B.txt") + "\n");
+		
+		System.out.println("La primera solución funcional es: " + ej3Fv2("ficherosBuenos/PI1EJ3DatosEntrada1A.txt", "ficherosBuenos/PI1EJ3DatosEntrada1B.txt"));
+		System.out.println("La segunda solución funcional es: " + ej3Fv2("ficherosBuenos/PI1EJ3DatosEntrada2A.txt", "ficherosBuenos/PI1EJ3DatosEntrada2B.txt"));
+		System.out.println("La tercera solución funcional es: " + ej3Fv2("ficherosBuenos/PI1EJ3DatosEntrada3A.txt", "ficherosBuenos/PI1EJ3DatosEntrada3B.txt"));
 	}
+
 
 }
