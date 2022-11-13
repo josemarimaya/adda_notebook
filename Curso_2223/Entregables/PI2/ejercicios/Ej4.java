@@ -2,13 +2,18 @@ package ejercicios;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import us.lsi.tiposrecursivos.BinaryTree;
 import us.lsi.tiposrecursivos.BinaryTree.BEmpty;
 import us.lsi.tiposrecursivos.BinaryTree.BLeaf;
 import us.lsi.tiposrecursivos.BinaryTree.BTree;
+import us.lsi.tiposrecursivos.Tree;
+import us.lsi.tiposrecursivos.Tree.TEmpty;
+import us.lsi.tiposrecursivos.Tree.TLeaf;
+import us.lsi.tiposrecursivos.Tree.TNary;
 
-public class Ejercicio4 {
+public class Ej4 {
 	
 	/*
 	 * Dado un árbol binario de cadena de caracteres, diseñe un algoritmo que devuelva cierto
@@ -18,28 +23,50 @@ public class Ejercicio4 {
 	 * */
 	
 	public static Boolean solucionRecursiva(BinaryTree<String> tree) {
-		return recursivoB(tree, true);
+		return recursivoB(tree, true, 0);
 	}
 	
 	// N-arios: https://github.com/migueltoro/ada_v2_18/blob/master/java/EjemplosParteComun/src/us/lsi/trees/TreesTest.java
 	
-	private static Boolean recursivoB(BinaryTree<String> tree, Boolean b) {
-		// TODO Auto-generated method stub
-		Integer acumVocal = 0;
+	private static Boolean recursivoB(BinaryTree<String> tree, Boolean b, Integer acumVocal) {
 		return switch(tree) {
-		case BEmpty<String> t-> b;
+		case BEmpty<String> t-> false;
 		case BLeaf<String> t-> {
-			Integer s_actual = cuentaVocales(t.label());
-			acumVocal = acumVocal + s_actual;
+			Integer vocales_actuales = cuentaVocales(t.label());
+			yield acumVocal == vocales_actuales;
 		}
 		case BTree<String> t-> {
-			Integer s_actual = cuentaVocales(t.label());
-			acumVocal = acumVocal + s_actual;
+			acumVocal = cuentaVocales(t.label());
 			BinaryTree<String> subarbolIzquierdo = t.left();
 			BinaryTree<String> subarbolDerecho = t.right();
-			yield (recursivoB(subarbolIzquierdo, b) == recursivoB(subarbolDerecho, b));
+			yield (recursivoB(subarbolIzquierdo, b, acumVocal) == recursivoB(subarbolDerecho, b, acumVocal));
 		}
 		default-> b;
+		};
+	}
+	
+	public static Boolean solucionRecursivaT(Tree<String> tree) {
+		return recursivoT(tree, true, 0);
+	}
+	
+	// N-arios: https://github.com/migueltoro/ada_v2_18/blob/master/java/EjemplosParteComun/src/us/lsi/trees/TreesTest.java
+	
+	private static Boolean recursivoT(Tree<String> tree, Boolean b, Integer acumVocal) {
+		// TODO Auto-generated method stub
+		return switch(tree) {
+		case TEmpty<String> t-> false;
+		case TLeaf<String> t->{
+			Integer vocales_actuales = cuentaVocales(t.label());
+			yield acumVocal == vocales_actuales;
+		}
+		case TNary<String> t->{
+			Integer acum = cuentaVocales(t.label());
+			Boolean br = acumVocal == acum;
+			t.elements().forEach(tc->{
+				recursivoT(tc, br, acum);
+			});
+			yield b;
+		}
 		};
 	}
 
@@ -65,6 +92,13 @@ public class Ejercicio4 {
 			res = false;
 		}
 		return res;
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println(cuentaVocales("pepe"));
+		
+		System.out.println(mismasVocales("pepe", "pepa"));
 	}
 
 }
