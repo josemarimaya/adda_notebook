@@ -13,11 +13,20 @@ import ejercicios.Ej2;
 import tests.TestEjemplo3.TResultMedD;
 import us.lsi.common.Files2;
 import us.lsi.common.List2;
+import us.lsi.common.Pair;
 import us.lsi.common.Trio;
+import us.lsi.curvefitting.DataCurveFitting;
+import utils.GraficosAjuste;
 import utils.Resultados;
 import utils.TipoAjuste;
 
 public class TestEjercicio2 {
+	
+	/*public static void main(String[] args) {
+		generaFicherosTiempoEjecucionImpresion();
+		muestraGraficas();
+	}*/
+	
 
 	private static Integer numMediciones = 2; // número de mediciones de tiempo de cada caso (número de experimentos)
 	private static Integer numIter = 5; // número de iteraciones para cada medición de tiempo
@@ -78,6 +87,42 @@ public class TestEjercicio2 {
 
 		}
 	}
+	
+	public static void generaFicherosTiempoEjecucionImpresion() {
+		generaFicherosTiempoEjecucion(metodosComplejidad);
+		generaFicherosTiempoEjecucion(metodosUmbral);
+	}
+	
+	public static <E> void muestraGraficasMetodos(List<Trio<BiConsumer<List<Integer>, Integer>, TipoAjuste, String>> metodosComplejidad2, List<String> ficherosSalida, List<String> labels) {
+		for (int i=0; i<metodosComplejidad2.size(); i++) { 
+			
+			String ficheroSalida = String.format("ficheros/Tiempos%s.csv",
+					metodosComplejidad2.get(i).third());
+			ficherosSalida.add(ficheroSalida);
+			String label = metodosComplejidad2.get(i).third();
+			System.out.println(label);
+
+			TipoAjuste tipoAjuste = metodosComplejidad2.get(i).second();
+			GraficosAjuste.show(ficheroSalida, tipoAjuste, label);	
+			
+			// Obtener ajusteString para mostrarlo en gráfica combinada
+			Pair<Function<Double, Double>, String> parCurve = GraficosAjuste.fitCurve(
+					DataCurveFitting.points(ficheroSalida), tipoAjuste);
+			String ajusteString = parCurve.second();
+			labels.add(String.format("%s     %s", label, ajusteString));
+		}
+	}
+	
+	public static void muestraGraficas() {
+		List<String> ficherosSalida = new ArrayList<>();
+		List<String> labels = new ArrayList<>();
+		
+		muestraGraficasMetodos(metodosComplejidad, ficherosSalida, labels);
+		muestraGraficasMetodos(metodosUmbral, ficherosSalida, labels);
+		
+		GraficosAjuste.showCombined("Cálculo del factorial", ficherosSalida, labels);
+	}
+
 	
 	public static void generaFicheroListasEnteros(String fichero) {
 		Resultados.cleanFile(fichero);
@@ -219,5 +264,6 @@ public static void testTiemposEjecucionUmbral(
 			f.accept(ls,umbral);
 		}
 	}    
-
+	
+	
 }

@@ -1,5 +1,6 @@
 package ejercicios;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +70,76 @@ public class Ej4 {
 		}
 		};
 	}
+	
+	public static Boolean solucionRecursivaT2(Tree<String> tree) {
+		return recursivoT2(tree, true);
+	}
+	
+	private static Boolean recursivoT2(Tree<String> tree, Boolean b) {
+		// TODO Auto-generated method stub
+		return switch(tree) {
+		case TEmpty<String> t-> false;
+		case TLeaf<String> t->{
+			yield b;
+		}
+		case TNary<String> t->{
+			//Boolean br = acumVocal == acum;
+			/*t.elements().forEach(tc->{
+				recursivoT2(tc, br, nivel+1 , acum, ls);
+			});*/
+			/*t.byDepth().forEach(tl ->{
+				tl.
+			});
+			for(int i=0; i< t.height(); i++) {
+				List<Tree<String>> tl = t.level(i);
+				for(int j=0; j< tl.size(); j++) {
+					Integer vocales_actuales = cuentaVocales(tl.get(i).);
+					recursivoT2(tree, b, acumVocal);
+				}
+			}*/
+			if(b) {
+				List<Tree<String>> hijos = t.elements();
+				Boolean res = null; 
+				if(!hijos.contains(Tree.empty())) {
+					res = cuentaVocalesN(hijos);
+					for(Tree<String> hijo : hijos) {
+						if(res) {
+							res = recursivoT2(hijo, res);
+						}else {
+							res = false;
+						}
+					}
+					
+				}
+				yield res;
+			}else {
+				yield b;
+			}
+			
+		}	
+		};
+	}
+	
+	public static Boolean cuentaVocalesN(List<Tree<String>> arboles) {
+		Boolean res = true;
+		// Cogemos las vocales del primer arbol
+		Integer sumaVocales = cuentaVocales(arboles.get(0).toString());
+		
+		Integer i = 0;
+		// Cuando sea falso lo devolvemos inmediatamente
+		while(i<arboles.size() && res) {
+			
+			String arbol = arboles.get(i).toString();
+			Integer suma_vocales_actuales = cuentaVocales(arbol);
+			
+			// Comparamos lo dos valores de suma de vocales
+			res = sumaVocales == suma_vocales_actuales;
+			i++;
+		}
+		
+		return res;
+		
+	}
 
 	public static Integer cuentaVocales(String s) {
 		List<Character> ls_vocales = Arrays.asList('a', 'e', 'i', 'o', 'u');
@@ -94,11 +165,5 @@ public class Ej4 {
 		return res;
 	}
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println(cuentaVocales("pepe"));
-		
-		System.out.println(mismasVocales("pepe", "pepa"));
-	}
 
 }
