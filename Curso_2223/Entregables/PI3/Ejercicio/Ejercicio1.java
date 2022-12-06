@@ -1,6 +1,11 @@
 package Ejercicios;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -32,6 +37,7 @@ public class Ejercicio1 {
 	public static void main(String[] args) {
 		Graph<Familiar, Relacion> g = grafo("A");
 		System.out.println(g);
+		predecesores(g);
 		
 	}
 	
@@ -56,10 +62,14 @@ public class Ejercicio1 {
 			Predicate<Relacion> pa, String nombreVista,
 			String file) {
 		
-		//Graph<Familiar, Relacion> vista = SubGraphView.of(g, pv, pa);
+		Map<Familiar, List<Familiar>> predecesors = predecesores(g);
 		
-		Graphs.predecessorListOf(null, null);
-		
+		Predicate<Familiar> pv1 = v->{
+			List<Familiar> f = predecesors.get(v);
+			Set<Familiar> sv = g.vertexSet();
+			return contieneFamiliarYPadre(f, sv, v, g);
+		};
+	
 		GraphColors.toDot(g, "resultados/ejercicio1/A.gv", 
 				x->x.nombre(), x->"",
 				v-> GraphColors.colorIf(Color.blue, pv.test(v))
@@ -67,16 +77,62 @@ public class Ejercicio1 {
 				// ,a-> GraphColors.colorIf(Color.blue, pa.test(a)));
 	}
 	
+	public static Map<Familiar, List<Familiar>> predecesores(Graph<Familiar, Relacion> g){
+		// Iteramos el set que contiene los vertices
+		Set<Familiar> sf = g.vertexSet();
+		Iterator<Familiar> itv = sf.iterator();
+		// Creamos un map que contenga los vértices y su lista de predecesores
+		Map<Familiar, List<Familiar>> mlf_padres = new HashMap<>();
+		while(itv.hasNext()){
+			Familiar f_actual = itv.next();
+			// Método de graphs para los predecesores
+			List<Familiar> lf = Graphs.predecessorListOf(g, f_actual);
+			// Si existe una arista que vaya al predecesor al hijo
+			// Quiere decir que es padre
+			List<Familiar> padres = new ArrayList<>();
+			for (Familiar familiar : lf) {
+				if(g.containsEdge(familiar, f_actual)) {
+					// Los guardamos en el map
+					padres.add(familiar);
+					mlf_padres.put(f_actual, padres);
+				}
+			}
+			
+			
+		}
+		
+		System.out.println(mlf_padres);
+		
+		return mlf_padres;
+	}
+	
+	// Método auxiliar para comprobar que los predecesores del vertice están en el grafo
+	public static Boolean contieneFamiliarYPadre(List<Familiar> lf, Set<Familiar> sv,
+			Familiar hijo, Graph<Familiar, Relacion> g) {
+		Boolean res = null;
+		for (Familiar f : lf) {
+			if(sv.contains(f) 
+					// También comprobamos teniendo al hijo como destino y al padre como origen si es relación directa padre e hijo
+					&& g.containsEdge(f, hijo)) {
+				res = true;
+			}else {
+				res = false;
+			}
+		}
+		return res;
+	}
+	
+	
 	/*b.Implemente un algoritmo que dada una persona devuelva un conjunto con todos
 		sus ancestros que aparecen en el grafo. Muestre el grafo configurando su
 		apariencia de forma que se resalte la persona de un color y sus ancestros de otro*/
-	
+	/*
 	public static Set<Familiar> apartadoB(Familiar f, Graph<Familiar, Relacion> g){
-		Set<Familiar> res = new HashSet<>();
+		Set<Relacion> res = new HashSet<>();
 		res = g.incomingEdgesOf(f);
 		return res;
 		
-	}
+	}*/
 
 
 }

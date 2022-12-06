@@ -3,14 +3,13 @@ package Tests;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 
-import Ejemplos.Ejemplo3;
 import Ejercicios.Ejercicio3;
 import us.lsi.colors.GraphColors;
 import us.lsi.common.Files2;
 import us.lsi.graphs.Graphs2;
 
 public class TestEjercicio3 {
-
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		testEjercicio3("PI3E3A_DatosEntrada");
@@ -41,7 +40,7 @@ public class TestEjercicio3 {
 		});
 		
 		GraphColors.toDot(g, "resultados/ejercicio3/PI3E3_inicial.gv");
-		Ejercicio3.apartadoA(g, file);
+		Ejercicio3.apartadoAyB(g, file);
 		
 		
 	}
@@ -82,7 +81,7 @@ public class TestEjercicio3 {
 		});
 		
 		GraphColors.toDot(g, "resultados/ejercicio3/PI3E3_actividades.gv");
-		Ejercicio3.apartadoA(g, file);
+		Ejercicio3.apartadoAyB(g, file);
 		
 	}
 
