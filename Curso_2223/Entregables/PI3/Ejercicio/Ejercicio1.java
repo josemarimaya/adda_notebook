@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultEdge;
 
 import us.lsi.colors.GraphColors;
 import us.lsi.colors.GraphColors.Color;
@@ -28,18 +29,7 @@ public class Ejercicio1 {
 		de a. De cada persona se conoce un identificador numérico único, su nombre, año y
 		ciudad de nacimiento*/
 	
-	public static Graph<Familiar, Relacion> grafo(String apartado){
-		return GraphsReader.newGraph("ficheros/PI3E1" + apartado +"_DatosEntrada.txt", 
-				Familiar::ofFormat, Relacion::ofFormat, 
-				Graphs2::simpleGraph);
-	}
 	
-	public static void main(String[] args) {
-		Graph<Familiar, Relacion> g = grafo("A");
-		System.out.println(g);
-		predecesores(g);
-		
-	}
 	
 	/*a.Obtenga una vista del grafo que sólo incluya las personas cuyos padres aparecen
 	en el grafo, y ambos han nacido en la misma ciudad y en el mismo año. Muestre
@@ -47,15 +37,64 @@ public class Ejercicio1 {
 	aristas de la vista. */
 
 	
+	public static void crearVistaA_2(String file, Graph<Familiar, DefaultEdge> g, 
+			Predicate<Familiar> pv, String vista) {
+		
+		// Hemos llegado a la conclusión que al ser no ponderado es DefaultEdge y con la vista hacemos SubGraphView
+		Graph<Familiar, DefaultEdge> view = SubGraphView.of(g, pv, null);
+		
+		GraphColors.toDot(g, "resultados/ejercicio1/ " + file + vista +".gv",
+				v-> v.nombre(),
+				a->"",
+				v-> GraphColors.colorIf(Color.red, view.containsVertex(v)),
+				a-> GraphColors.colorIf(Color.red, view.containsEdge(a)));
+		
+		System.out.println("Se ha creado el grafo: " + vista);
+	}
 	
-	/*public static void apartadoA(Graph<Familiar, Relacion> g, String file) {
+	
+	
+	
+	/*b.Implemente un algoritmo que dada una persona devuelva un conjunto con todos
+		sus ancestros que aparecen en el grafo. Muestre el grafo configurando su
+		apariencia de forma que se resalte la persona de un color y sus ancestros de otro*/
+	
+	public static void apartadoB(String file, Graph<Familiar, DefaultEdge> g, 
+			Predicate<Familiar> pv, Familiar f,String vista){
 		
-		GraphColors.toDot(g, "resultados/ejercicio1/ " + file + "A.gv",
-				x->x.nombre(),x->"",
-				v-> GraphColors.colorIf(Color.blue, Color.black, 
-						g.edgesOf(v).stream().allMatch()));
+		Graph<Familiar, DefaultEdge> view = SubGraphView.of(g, pv, null);
 		
-	}*/
+		Map<Familiar, Color> m = new HashMap<>();
+		
+		// Recorremos los vertices del grafo
+		for (Familiar fg : g.vertexSet()) {
+			// Si el vértice es la persona observada le ponemos un color...
+			if(fg.equals(f)) {
+				m.put(fg, Color.red);
+				// ... y si observamos a sus descendientes de otra ...
+			}else if(view.containsVertex(fg)) {
+				m.put(fg, Color.blue);
+				// ... sino lo dejamos igual ...
+			}else {
+				m.put(fg, Color.black);
+			}
+		}
+		
+		GraphColors.toDot(g, "resultados/ejercicio1/ " + file + vista +".gv",
+				v-> v.nombre(),
+				a->"",
+				/*
+				 *  Pintamos el vértice del color que tenga asignado 
+				 *  en el map al recorrer los vértices del grafo
+				 */
+				v-> GraphColors.color(m.get(v)),
+				a-> GraphColors.colorIf(Color.red, view.containsEdge(a)));
+		
+		System.out.println("Se ha creado el grafo: " + vista);
+		
+	}
+	
+	// --------------------- Metodos de prueba sin buen resultado ------------------
 	
 	public static void crearVistaA(Graph<Familiar, Relacion> g,
 			Predicate<Familiar> pv,
@@ -75,6 +114,19 @@ public class Ejercicio1 {
 				v-> GraphColors.colorIf(Color.blue, pv.test(v))
 				,a-> GraphColors.color(Color.black));
 				// ,a-> GraphColors.colorIf(Color.blue, pa.test(a)));
+	}
+	
+	public static Graph<Familiar, Relacion> grafo(String apartado){
+		return GraphsReader.newGraph("ficheros/PI3E1" + apartado +"_DatosEntrada.txt", 
+				Familiar::ofFormat, Relacion::ofFormat, 
+				Graphs2::simpleGraph);
+	}
+	
+	public static void main(String[] args) {
+		Graph<Familiar, Relacion> g = grafo("A");
+		System.out.println(g);
+		predecesores(g);
+		
 	}
 	
 	public static Map<Familiar, List<Familiar>> predecesores(Graph<Familiar, Relacion> g){
@@ -121,18 +173,6 @@ public class Ejercicio1 {
 		}
 		return res;
 	}
-	
-	
-	/*b.Implemente un algoritmo que dada una persona devuelva un conjunto con todos
-		sus ancestros que aparecen en el grafo. Muestre el grafo configurando su
-		apariencia de forma que se resalte la persona de un color y sus ancestros de otro*/
-	/*
-	public static Set<Familiar> apartadoB(Familiar f, Graph<Familiar, Relacion> g){
-		Set<Relacion> res = new HashSet<>();
-		res = g.incomingEdgesOf(f);
-		return res;
-		
-	}*/
 
 
 }
